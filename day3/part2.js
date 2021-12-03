@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-input = fs.readFileSync('input1.txt', 'utf8')
+const input = fs.readFileSync('input.txt', 'utf8')
     .split('\n')
 
 const initialReducerVal = array => [...Array(array[0].length)]
@@ -35,20 +35,13 @@ const getCo2Bit = ({o, z}) => {
     }
 }
 
-const getOgRating = (inputs, idx = 0) => {
+const getRating = (inputs, getBitFn, idx = 0) => {
     const bits = getCommonBits(inputs)
-    const bit = getOGBit(bits[idx])
-    let result = inputs.filter((input) => +input[idx] === +bit)
-    return result.length === 1 ? result : getOgRating(result, idx + 1)
+    const bit = getBitFn(bits[idx])
+    const result = inputs.filter((input) => +input[idx] === +bit)
+    return result.length === 1 ? result : getRating(result, getBitFn, idx + 1)
 }
 
-const getCo2Rating = (inputs, idx = 0) => {
-    const bits = getCommonBits(inputs)
-    const bit = getCo2Bit(bits[idx])
-    let result = inputs.filter((input) => +input[idx] === +bit)
-    return result.length === 1 ? result : getCo2Rating(result, idx + 1)
-}
-
-const ox = parseInt(getOgRating(input), 2)
-const co2 = parseInt(getCo2Rating(input), 2)
+const ox = parseInt(getRating(input, getOGBit), 2)
+const co2 = parseInt(getRating(input, getCo2Bit), 2)
 console.log(ox * co2)
